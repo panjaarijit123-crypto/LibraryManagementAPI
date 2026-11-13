@@ -1,0 +1,1326 @@
+{
+  "info": {
+    "_postman_id": "f1426359-205d-4690-ad7e-4c48936ee011",
+    "name": "LibraryManagementAPI - Automated Tests (Fixed URLs)",
+    "description": "Fixed Postman v2.1 collection. Import and run requests in order. Base URL is http://localhost:8086. The collection creates unique test records and captures IDs automatically. It does not delete existing Rahul/student records.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "60178742",
+    "_collection_link": "https://go.postman.co/collection/60178742-f1426359-205d-4690-ad7e-4c48936ee011?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "01 - Create test book",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const stamp = Date.now().toString();",
+              "pm.collectionVariables.set('testIsbn', '978' + stamp.slice(-13));"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 201', function () { pm.response.to.have.status(201); });",
+              "if (pm.response.code === 201) { const data = pm.response.json(); pm.collectionVariables.set('bookId', data.bookId); }",
+              "pm.test('Book was created', function () { pm.expect(pm.response.json().title).to.eql('Postman Test Java Book'); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Postman Test Java Book\",\n  \"author\": \"Test Author\",\n  \"isbn\": \"{{testIsbn}}\",\n  \"category\": \"Programming\",\n  \"totalCopies\": 10,\n  \"availableCopies\": 10\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/library/api/book/",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "library",
+            "api",
+            "book",
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "02 - Create test student",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.collectionVariables.set('testEmail', 'postman_' + Date.now() + '@example.com');"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 201', function () { pm.response.to.have.status(201); });",
+              "if (pm.response.code === 201) { const data = pm.response.json(); pm.collectionVariables.set('studentId', data.studentId); }"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"studentName\": \"Postman Test Student\",\n  \"email\": \"{{testEmail}}\",\n  \"department\": \"Computer Science\",\n  \"phoneNumber\": \"9876543210\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/library/api/student/",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "library",
+            "api",
+            "student",
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "03 - Get all books",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Response is an array', function () { pm.expect(pm.response.json()).to.be.an('array'); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/library/api/book/",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "library",
+            "api",
+            "book",
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "04 - Get book by ID",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 200', function () { pm.response.to.have.status(200); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/library/api/book/{{bookId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "library",
+            "api",
+            "book",
+            "{{bookId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "05 - Get books by category",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 200', function () { pm.response.to.have.status(200); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/library/api/book/category/Programming",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "library",
+            "api",
+            "book",
+            "category",
+            "Programming"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "06 - Update book",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 200', function () { pm.response.to.have.status(200); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"bookId\": \"{{bookId}}\",\n  \"title\": \"Updated Postman Java Book\",\n  \"author\": \"Test Author\",\n  \"isbn\": \"{{testIsbn}}\",\n  \"category\": \"Programming\",\n  \"totalCopies\": 10,\n  \"availableCopies\": 10\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/library/api/book/",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "library",
+            "api",
+            "book",
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "07 - Get all students",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Response is an array', function () { pm.expect(pm.response.json()).to.be.an('array'); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/library/api/student/",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "library",
+            "api",
+            "student",
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "08 - Get student by ID",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 200', function () { pm.response.to.have.status(200); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/library/api/student/{{studentId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "library",
+            "api",
+            "student",
+            "{{studentId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "09 - Get student by email",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 200', function () { pm.response.to.have.status(200); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/library/api/student/email/{{testEmail}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "library",
+            "api",
+            "student",
+            "email",
+            "{{testEmail}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "10 - Get students by department",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 200', function () { pm.response.to.have.status(200); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/library/api/student/department/Computer%20Science",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "library",
+            "api",
+            "student",
+            "department",
+            "Computer%20Science"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "11 - Search students by name",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 200', function () { pm.response.to.have.status(200); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/library/api/student/search/Postman",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "library",
+            "api",
+            "student",
+            "search",
+            "Postman"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "12 - Update student",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 200', function () { pm.response.to.have.status(200); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"studentId\": \"{{studentId}}\",\n  \"studentName\": \"Postman Test Student\",\n  \"email\": \"{{testEmail}}\",\n  \"department\": \"Information Technology\",\n  \"phoneNumber\": \"9876543210\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/library/api/student/",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "library",
+            "api",
+            "student",
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "13 - Issue book (first issue)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 201', function () { pm.response.to.have.status(201); });",
+              "if (pm.response.code === 201) { const data = pm.response.json(); pm.collectionVariables.set('issueId1', data.issueId); }",
+              "pm.test('Issue status is ISSUED', function () { pm.expect(pm.response.json().status).to.eql('ISSUED'); });",
+              "pm.test('Issue and due dates exist', function () { const d=pm.response.json(); pm.expect(d.issueDate).to.exist; pm.expect(d.dueDate).to.exist; });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/library/api/issue/{{studentId}}/{{bookId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "library",
+            "api",
+            "issue",
+            "{{studentId}}",
+            "{{bookId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "14 - Get all issue records",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 200', function () { pm.response.to.have.status(200); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/library/api/issue/",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "library",
+            "api",
+            "issue",
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "15 - Get issues by student",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 200', function () { pm.response.to.have.status(200); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/library/api/issue/student/{{studentId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "library",
+            "api",
+            "issue",
+            "student",
+            "{{studentId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "16 - Get issue by ID",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 200', function () { pm.response.to.have.status(200); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/library/api/issue/{{issueId1}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "library",
+            "api",
+            "issue",
+            "{{issueId1}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "17 - Get overdue issues",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 200', function () { pm.response.to.have.status(200); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/library/api/issue/overdue",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "library",
+            "api",
+            "issue",
+            "overdue"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "18 - Issue book (second active issue)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 201', function () { pm.response.to.have.status(201); });",
+              "if (pm.response.code === 201) { const data = pm.response.json(); pm.collectionVariables.set('issueId2', data.issueId); }"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/library/api/issue/{{studentId}}/{{bookId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "library",
+            "api",
+            "issue",
+            "{{studentId}}",
+            "{{bookId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "19 - Issue book (third active issue)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 201', function () { pm.response.to.have.status(201); });",
+              "if (pm.response.code === 201) { const data = pm.response.json(); pm.collectionVariables.set('issueId3', data.issueId); }"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/library/api/issue/{{studentId}}/{{bookId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "library",
+            "api",
+            "issue",
+            "{{studentId}}",
+            "{{bookId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "20 - Fourth active issue should be rejected",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Maximum three active issues is enforced', function () { pm.response.to.have.status(400); });",
+              "pm.test('Error message is present', function () { pm.expect(pm.response.text()).to.include('Student cannot issue more than 3 books'); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/library/api/issue/{{studentId}}/{{bookId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "library",
+            "api",
+            "issue",
+            "{{studentId}}",
+            "{{bookId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "21 - Return first issue",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Issue is marked RETURNED', function () { pm.expect(pm.response.json().status).to.eql('RETURNED'); });",
+              "pm.test('Return date is set', function () { pm.expect(pm.response.json().returnDate).to.exist; });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/library/api/issue/return/{{issueId1}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "library",
+            "api",
+            "issue",
+            "return",
+            "{{issueId1}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "22 - Returning same issue twice should be rejected",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Duplicate return is rejected', function () { pm.response.to.have.status(400); });",
+              "pm.test('Error message is present', function () { pm.expect(pm.response.text()).to.include('Book has already been returned'); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/library/api/issue/return/{{issueId1}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "library",
+            "api",
+            "issue",
+            "return",
+            "{{issueId1}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "23 - Create zero-stock test book",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.collectionVariables.set('zeroStockIsbn', '979' + Date.now().toString().slice(-13));"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 201', function () { pm.response.to.have.status(201); });",
+              "if (pm.response.code === 201) { const data = pm.response.json(); pm.collectionVariables.set('zeroStockBookId', data.bookId); }"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Zero Stock Test Book\",\n  \"author\": \"Test Author\",\n  \"isbn\": \"{{zeroStockIsbn}}\",\n  \"category\": \"Testing\",\n  \"totalCopies\": 5,\n  \"availableCopies\": 0\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/library/api/book/",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "library",
+            "api",
+            "book",
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "24 - Issue zero-stock book should be rejected",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('No-copies rule is enforced', function () { pm.response.to.have.status(400); });",
+              "pm.test('Error message is present', function () { pm.expect(pm.response.text()).to.include('No copies available'); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/library/api/issue/{{studentId}}/{{zeroStockBookId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "library",
+            "api",
+            "issue",
+            "{{studentId}}",
+            "{{zeroStockBookId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "25 - Duplicate ISBN should be rejected",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Duplicate ISBN returns 409', function () { pm.response.to.have.status(409); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Duplicate ISBN Book\",\n  \"author\": \"Another Author\",\n  \"isbn\": \"{{testIsbn}}\",\n  \"category\": \"Programming\",\n  \"totalCopies\": 2,\n  \"availableCopies\": 2\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/library/api/book/",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "library",
+            "api",
+            "book",
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "26 - Duplicate student email should be rejected",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Duplicate email returns 409', function () { pm.response.to.have.status(409); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"studentName\": \"Duplicate Student\",\n  \"email\": \"{{testEmail}}\",\n  \"department\": \"Testing\",\n  \"phoneNumber\": \"9876543211\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/library/api/student/",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "library",
+            "api",
+            "student",
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "27 - Invalid book data should be rejected",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Invalid book data returns 400', function () { pm.response.to.have.status(400); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"\",\n  \"author\": \"A\",\n  \"isbn\": \"\",\n  \"category\": \"\",\n  \"totalCopies\": -1,\n  \"availableCopies\": 0\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/library/api/book/",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "library",
+            "api",
+            "book",
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "28 - Invalid student email should be rejected",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Invalid email returns 400', function () { pm.response.to.have.status(400); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"studentName\": \"Invalid Email Student\",\n  \"email\": \"not-an-email\",\n  \"department\": \"Testing\",\n  \"phoneNumber\": \"9876543210\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/library/api/student/",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "library",
+            "api",
+            "student",
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "29 - Create disposable book for delete test",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.collectionVariables.set('deleteBookIsbn', '977' + Date.now().toString().slice(-13));"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 201', function () { pm.response.to.have.status(201); });",
+              "if (pm.response.code === 201) { const data = pm.response.json(); pm.collectionVariables.set('deleteBookId', data.bookId); }"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Disposable Delete Book\",\n  \"author\": \"Delete Author\",\n  \"isbn\": \"{{deleteBookIsbn}}\",\n  \"category\": \"Testing\",\n  \"totalCopies\": 1,\n  \"availableCopies\": 1\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/library/api/book/",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "library",
+            "api",
+            "book",
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "30 - Delete disposable book",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Book delete returns 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Success message is returned', function () { pm.expect(pm.response.text()).to.include('Book deleted successfully'); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/library/api/book/{{deleteBookId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "library",
+            "api",
+            "book",
+            "{{deleteBookId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "31 - Create disposable student for delete test",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.collectionVariables.set('deleteStudentEmail', 'delete_' + Date.now() + '@example.com');"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 201', function () { pm.response.to.have.status(201); });",
+              "if (pm.response.code === 201) { const data = pm.response.json(); pm.collectionVariables.set('deleteStudentId', data.studentId); }"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"studentName\": \"Disposable Delete Student\",\n  \"email\": \"{{deleteStudentEmail}}\",\n  \"department\": \"Testing\",\n  \"phoneNumber\": \"9876543212\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/library/api/student/",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "library",
+            "api",
+            "student",
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "32 - Delete disposable student",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Student delete returns 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Success message is returned', function () { pm.expect(pm.response.text()).to.include('Student deleted successfully'); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/library/api/student/{{deleteStudentId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "library",
+            "api",
+            "student",
+            "{{deleteStudentId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "33 - Issue with missing student should return 404",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Missing student returns 404', function () { pm.response.to.have.status(404); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/library/api/issue/0/{{bookId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "library",
+            "api",
+            "issue",
+            "0",
+            "{{bookId}}"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8086"
+    },
+    {
+      "key": "bookId",
+      "value": ""
+    },
+    {
+      "key": "studentId",
+      "value": ""
+    },
+    {
+      "key": "issueId1",
+      "value": ""
+    },
+    {
+      "key": "issueId2",
+      "value": ""
+    },
+    {
+      "key": "issueId3",
+      "value": ""
+    },
+    {
+      "key": "zeroStockBookId",
+      "value": ""
+    },
+    {
+      "key": "deleteBookId",
+      "value": ""
+    },
+    {
+      "key": "deleteStudentId",
+      "value": ""
+    },
+    {
+      "key": "testIsbn",
+      "value": ""
+    },
+    {
+      "key": "testEmail",
+      "value": ""
+    },
+    {
+      "key": "zeroStockIsbn",
+      "value": ""
+    },
+    {
+      "key": "deleteBookIsbn",
+      "value": ""
+    },
+    {
+      "key": "deleteStudentEmail",
+      "value": ""
+    }
+  ]
+}
